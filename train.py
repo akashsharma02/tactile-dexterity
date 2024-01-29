@@ -23,13 +23,17 @@ def train(fabric, cfg) -> None:
     learner = init_learner(cfg, fabric)
 
     best_loss = torch.inf 
+    if cfg.ckpt is not None: 
+        learner.load(cfg.ckpt)
 
     # Logging
     pbar = tqdm(total=cfg.train_epochs)
     # Initialize logger (wandb)
+    logger = None
     if cfg.logger and fabric.global_rank == 0:
+        hydra_job_id = hydra.core.hydra_config.HydraConfig.get().job.id
         hydra_run_dir = hydra.core.hydra_config.HydraConfig.get().runtime.output_dir
-        wandb_exp_name = '-'.join(hydra_run_dir.split('/')[-2:])
+        wandb_exp_name = f"{hydra_job_id}_{cfg.experiment}"
         logger = Logger(cfg, wandb_exp_name, out_dir=hydra_run_dir)
 
     # Start the training
@@ -73,7 +77,7 @@ def train(fabric, cfg) -> None:
 def main(cfg : DictConfig) -> None:
 
     fabric = Fabric() 
-    fabric.seed_everything(42)
+    fabric.seed_everything(cfg.seed)
     fabric.launch()
     train(fabric, cfg)
     

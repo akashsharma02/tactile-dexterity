@@ -133,6 +133,7 @@ tactile_learning/out/*
 outputs/*
 wandb/*
 .vscode/*
+slurm/*
 
 *__pycache__*
 

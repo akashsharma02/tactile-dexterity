@@ -4,6 +4,14 @@ defaults:
     - dataset: tactile_tdex_dataset
     - optimizer: adam
     - _self_
+
+# hydra configuration - should be received separately
+hydra:
+    job: 
+        id: ${now:%Y.%m.%d}/${now:%H-%M}
+    run:
+        dir: /fsx-checkpoints/akashsharma02/logs/${hydra.job.id}_${experiment}
+
 preprocess:
     data_path: /fsx-gum/akashsharma02/datasets/tdex/play_data
     process_single_demo: false
@@ -18,15 +26,18 @@ preprocess:
     threshold_step_size: 0.1 # Step size to be used in subsampling
     view_num: 0 # Camera ID to dump the images
 
+experiment: experiment_name # Name of the experiment that the models are saved
 seed: 42
-device: cuda
+data_dir: /fsx-gum/akashsharma02/datasets/tdex/play_data
+checkpoint_dir: /fsx-checkpoints/akashsharma02/checkpoints/${hydra:job.id}_${experiment}
+ckpt: ~
 
 learner_type: tactile_byol # Can be tactile_stacked_byol # tactile_stacked_byol tactile_linear_byol, bc, tactile_byol
 self_supervised: true
 
 # Hyperparameters to be used everywhere
-# batch_size: 1280
 batch_size: 7680
+num_workers: 1
 tactile_image_size: 224 # This could be changed for stacked or shared architectures
 vision_image_size: 480
 hidden_dim: 64
@@ -34,20 +45,7 @@ train_epochs: 500
 save_frequency: 10
 train_dset_split: 0.95
 
-distributed: true
-num_workers: 1
-world_size: 1
-
-# Data path to be set
-experiment: experiment_name # Name of the experiment that the models are saved
-data_dir: /fsx-gum/akashsharma02/datasets/tdex/play_data
-checkpoint_dir: /fsx-checkpoints/akashsharma02/checkpoints/${now:%Y.%m.%d}/${now:%H-%M}_${experiment}
-
 # logger
 logger: true # To init logger or not
 log_frequency: 1
 
-# hydra configuration - should be received separately
-hydra:
-    run:
-        dir: /fsx-checkpoints/akashsharma02/logs/${now:%Y.%m.%d}/${now:%H-%M}_${experiment}

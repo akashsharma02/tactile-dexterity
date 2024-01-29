@@ -29,6 +29,9 @@ class BYOLLearner(Learner):
     def save(self, checkpoint_dir, model_type='best'):
         self.fabric.save(os.path.join(checkpoint_dir, f'byol_encoder_{model_type}.pt'), self.byol.state_dict())
 
+    def load(self, ckpt_path):
+        self.fabric.load_raw(ckpt_path, self.byol)
+
     def train_epoch(self, train_loader):
         self.train() 
 
