@@ -11,7 +11,7 @@ from .constants import *
 def get_tactile_augmentations(img_means, img_stds, img_size):
     tactile_aug = T.Compose([
         T.RandomApply(
-            nn.ModuleList([T.RandomResizedCrop(img_size, scale=(.9, 1))]),
+            nn.ModuleList([T.RandomResizedCrop(img_size, scale=(.9, 1), antialias=True)]),
             p = 0.5
         ), 
         T.RandomApply(

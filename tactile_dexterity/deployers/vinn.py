@@ -111,9 +111,9 @@ class VINN(Deployer):
         
         if encoder_type == 'image':
             transform = T.Compose([
-                T.Resize((480,640)),
+                T.Resize((480,640), antialias=True),
                 T.Lambda(crop_transform),
-                T.Resize(480),
+                T.Resize(480, antialias=True),
                 T.ToTensor(),
                 T.Normalize(VISION_IMAGE_MEANS, VISION_IMAGE_STDS),
             ]) 

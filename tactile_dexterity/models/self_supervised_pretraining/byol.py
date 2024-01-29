@@ -200,7 +200,7 @@ class BYOL(nn.Module):
                 T.GaussianBlur((3, 3), (1.0, 2.0)),
                 p = 0.2
             ),
-            T.RandomResizedCrop((image_size, image_size)),
+            T.RandomResizedCrop((image_size, image_size), antialias=True),
             T.Normalize(
                 mean=torch.tensor([0.485, 0.456, 0.406]),
                 std=torch.tensor([0.229, 0.224, 0.225])),

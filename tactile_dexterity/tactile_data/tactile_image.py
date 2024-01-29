@@ -6,7 +6,7 @@ import torchvision.transforms as T
 
 from copy import deepcopy as copy
 
-from tactile_dexterity.utils import tactile_clamp_transform, tactile_scale_transform
+from tactile_dexterity.utils.augmentations import tactile_clamp_transform, tactile_scale_transform
 
 # Class to retrieve tactile images depending on the type
 
@@ -20,7 +20,7 @@ class TactileImage:
         self.size = tactile_image_size
 
         self.transform = T.Compose([
-            T.Resize(tactile_image_size),
+            T.Resize(tactile_image_size, antialias=True),
             T.Lambda(tactile_clamp_transform),
             T.Lambda(tactile_scale_transform)
         ])
@@ -81,6 +81,6 @@ class TactileImage:
     
     def get_tactile_image_for_visualization(self, tactile_values):
         tactile_image = self._get_whole_hand_tactile_image(tactile_values)
-        tactile_image = T.Resize(224)(tactile_image) # Don't need another normalization
+        tactile_image = T.Resize(224, antialias=True)(tactile_image) # Don't need another normalization
         tactile_image = (tactile_image - tactile_image.min()) / (tactile_image.max() - tactile_image.min())
         return tactile_image  

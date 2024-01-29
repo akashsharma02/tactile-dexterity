@@ -6,7 +6,9 @@ import torchvision.transforms as T
 from torchvision.datasets.folder import default_loader as loader 
 from torch.utils import data
 
-from tactile_dexterity.utils import load_data, crop_transform, VISION_IMAGE_MEANS, VISION_IMAGE_STDS
+from tactile_dexterity.utils.data import load_data
+from tactile_dexterity.utils.constants import VISION_IMAGE_MEANS, VISION_IMAGE_STDS
+from tactile_dexterity.utils.augmentations import crop_transform
 
 # Vision only dataset
 class VisionDataset(data.Dataset):
@@ -22,7 +24,7 @@ class VisionDataset(data.Dataset):
         self.view_num = view_num
 
         self.transform = T.Compose([
-            T.Resize((480,640)),
+            T.Resize((480,640), antialias=True),
             T.Lambda(crop_transform),
             T.ToTensor(),
             T.Normalize(VISION_IMAGE_MEANS, VISION_IMAGE_STDS),

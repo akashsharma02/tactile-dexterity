@@ -18,15 +18,15 @@ def resnet34(pretrained : bool, out_dim): # These out_dims are only given for im
 
 
 def alexnet(pretrained, out_dim, remove_last_layer=False):
-    encoder = torch.hub.load('pytorch/vision:v0.10.0', 'alexnet', pretrained=pretrained)
+    encoder = torch.hub.load('pytorch/vision:v0.10.0', 'alexnet', weights='AlexNet_Weights.DEFAULT')
     if remove_last_layer:
         # Remove and recreate the last layer of alexnet - these values are taken from the alexnet implementation
-        encoder.classifier = nn.Sequential(
-            nn.Dropout(p=0.5, inplace=False),
-            nn.Linear(9216, out_features=4096, bias=True),
-            nn.ReLU(inplace=True),
-            nn.Dropout(p=0.5, inplace=False),
-            nn.Linear(4096, out_dim, bias=True)
-        )
-
+        encoder.classifier = nn.Identity()
+        # encoder.classifier = nn.Sequential(
+        #     nn.Dropout(p=0.5, inplace=False),
+        #     nn.Linear(9216, out_features=4096, bias=True),
+        #     nn.ReLU(inplace=True),
+        #     nn.Dropout(p=0.5, inplace=False),
+        #     nn.Linear(4096, out_dim, bias=True)
+        # )
     return encoder

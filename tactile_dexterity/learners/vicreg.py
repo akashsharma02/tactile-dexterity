@@ -7,10 +7,13 @@ class VICRegLearner(Learner):
     def __init__(
         self,
         vicreg_wrapper,
-        optimizer
+        optimizer,
+        fabric
+
     ):
         self.optimizer = optimizer
         self.vicreg_wrapper = vicreg_wrapper 
+        self.fabric = fabric
 
     def to(self, device):
         self.vicreg_wrapper.to(device)

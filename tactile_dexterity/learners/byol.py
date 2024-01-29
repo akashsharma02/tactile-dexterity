@@ -8,11 +8,12 @@ class BYOLLearner(Learner):
         self,
         byol,
         optimizer,
+        fabric,
         byol_type
     ):
-
         self.optimizer = optimizer 
         self.byol = byol
+        self.fabric = fabric
         self.byol_type = byol_type # Tactile or Image
 
     def to(self, device):
@@ -26,9 +27,7 @@ class BYOLLearner(Learner):
         self.byol.eval()
 
     def save(self, checkpoint_dir, model_type='best'):
-        torch.save(self.byol.state_dict(),
-                   os.path.join(checkpoint_dir, f'byol_encoder_{model_type}.pt'),
-                   _use_new_zipfile_serialization=False)
+        self.fabric.save(os.path.join(checkpoint_dir, f'byol_encoder_{model_type}.pt'), self.byol.state_dict())
 
     def train_epoch(self, train_loader):
         self.train() 
@@ -37,8 +36,7 @@ class BYOLLearner(Learner):
         train_loss = 0.0 
 
         # Training loop 
-        for batch in train_loader: 
-            image = batch.to(self.device)
+        for image in train_loader: 
             self.optimizer.zero_grad()
 
             # Get the loss by the byol            
@@ -46,8 +44,9 @@ class BYOLLearner(Learner):
             train_loss += loss.item() 
 
             # Backprop
-            loss.backward() 
+            self.fabric.backward(loss)
             self.optimizer.step()
             self.byol.update_moving_average() 
+            print(f"train_loss: {train_loss}")
 
         return train_loss / len(train_loader)

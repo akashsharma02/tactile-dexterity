@@ -3,6 +3,7 @@ import hydra
 from omegaconf import DictConfig
 
 from tactile_dexterity.datasets import *
+from tactile_dexterity.datasets.utils.preprocess import *
 
 @hydra.main(version_base=None, config_path='tactile_dexterity/configs', config_name='preprocess')
 def main(cfg : DictConfig) -> None:

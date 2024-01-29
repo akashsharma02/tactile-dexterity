@@ -25,7 +25,7 @@ class TactileRepresentation:
         # self.size = cfg.encoder.out_dim * 15 if representation_type == 'shared' else cfg.encoder.out_dim
         self.tactile_image = self.tactile_image
         self.transform = T.Compose([
-            T.Resize(tactile_image.size),
+            T.Resize(tactile_image.size, antialias=True),
             T.Normalize(TACTILE_IMAGE_MEANS, TACTILE_IMAGE_STDS)
         ])
         self.encoder = tactile_encoder
@@ -35,7 +35,7 @@ class TactileRepresentation:
             self.size = encoder_out_dim
         elif representation_type == 'shared':
             self.transform = T.Compose([
-                T.Resize(tactile_image.size),
+                T.Resize(tactile_image.size, antialias=True),
                 T.Normalize(TACTILE_IMAGE_MEANS*15, TACTILE_IMAGE_STDS*15)
             ])
             self.get = self._get_shared_repr

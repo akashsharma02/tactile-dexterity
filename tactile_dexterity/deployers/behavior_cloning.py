@@ -69,7 +69,7 @@ class BC(Deployer):
 
         # Set up the transforms for tactile and image encoders
         self.image_transform = T.Compose([
-            T.Resize((480,640)),
+            T.Resize((480,640), antialias=True),
             T.Lambda(crop_transform),
             T.ToTensor(),
             T.Normalize(VISION_IMAGE_MEANS, VISION_IMAGE_STDS),

@@ -3,6 +3,20 @@ defaults:
     - learner: tactile_byol
     - dataset: tactile_tdex_dataset
     - optimizer: adam
+    - _self_
+preprocess:
+    data_path: /fsx-gum/akashsharma02/datasets/tdex/play_data
+    process_single_demo: false
+
+    # Preprocessing for different types - if both false then preprocessing is done for deployment
+    vision_byol: false
+    tactile_byol: true
+
+    dump_images: false # If vision_byol is used dump_images should be true
+    dump_data_indices: true
+    dump_fingertips: true
+    threshold_step_size: 0.1 # Step size to be used in subsampling
+    view_num: 0 # Camera ID to dump the images
 
 seed: 42
 device: cuda
@@ -11,7 +25,8 @@ learner_type: tactile_byol # Can be tactile_stacked_byol # tactile_stacked_byol 
 self_supervised: true
 
 # Hyperparameters to be used everywhere
-batch_size: 1280
+# batch_size: 1280
+batch_size: 7680
 tactile_image_size: 224 # This could be changed for stacked or shared architectures
 vision_image_size: 480
 hidden_dim: 64
@@ -20,14 +35,13 @@ save_frequency: 10
 train_dset_split: 0.95
 
 distributed: true
-num_workers: 4
+num_workers: 1
 world_size: 1
-num_gpus: 4
 
 # Data path to be set
 experiment: experiment_name # Name of the experiment that the models are saved
-data_dir: /path/to/desired/data
-checkpoint_dir: ??? # Will be set to hydra dir inside the code
+data_dir: /fsx-gum/akashsharma02/datasets/tdex/play_data
+checkpoint_dir: /fsx-checkpoints/akashsharma02/checkpoints/${now:%Y.%m.%d}/${now:%H-%M}_${experiment}
 
 # logger
 logger: true # To init logger or not
@@ -36,4 +50,4 @@ log_frequency: 1
 # hydra configuration - should be received separately
 hydra:
     run:
-        dir: /root/directory/of/the/project/out/${now:%Y.%m.%d}/${now:%H-%M}_${experiment}
+        dir: /fsx-checkpoints/akashsharma02/logs/${now:%Y.%m.%d}/${now:%H-%M}_${experiment}
